@@ -12,7 +12,44 @@
       (cancelled)="showForm = false" />
   </div>
 
-  <p class="text-muted" *ngIf="!showForm">
-    Click "Add Book" to add your first book.
-  </p>
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border" role="status"></div>
+  </div>
+
+  <div *ngIf="!isLoading && books.length === 0 && !showForm" class="text-center py-5">
+    <p class="text-muted">No books yet. Add your first book!</p>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4" *ngIf="!isLoading && books.length > 0">
+    <div class="col" *ngFor="let book of books">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ book.title }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ book.author }}</h6>
+
+          <div class="d-flex gap-2 flex-wrap mt-2">
+            <span class="badge" *ngIf="book.genre"
+                  style="background-color: var(--color-secondary); color: var(--color-text);">
+              {{ book.genre }}
+            </span>
+            <span class="badge bg-warning text-dark" *ngIf="book.rating">
+              ⭐ {{ book.rating }}/5
+            </span>
+          </div>
+
+          <p class="card-text mt-2 small text-muted" *ngIf="book.notes">
+            {{ book.notes | slice:0:100 }}{{ book.notes!.length > 100 ? '...' : '' }}
+          </p>
+
+          <div class="mt-2 small" *ngIf="book.location">
+            <span>📍 {{ book.location.placeName }}, {{ book.location.country }}</span>
+          </div>
+        </div>
+
+        <div class="card-footer text-muted small">
+          {{ book.dateRead ? (book.dateRead | date:'MMM yyyy') : 'Date unknown' }}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

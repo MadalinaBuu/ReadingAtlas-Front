@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { CreateBook } from '../../models/book.model';
 import { GeminiLocation } from '../../models/gemini-location.model';
 import { BookService } from '../../services/book.service';
+import { MapViewComponent } from '../map-view/map-view.component';
 
 @Component({
   selector: 'app-book-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, MapViewComponent],
   templateUrl: './book-form.component.html',
   styleUrl: './book-form.component.scss'
 })
@@ -21,9 +22,10 @@ export class BookFormComponent {
   locationConfirmed = false;
   isLoadingSuggestion = false;
   suggestionError = '';
+  adjustedCoords?: { lat: number, lng: number };
 
   genres = ['Fiction', 'Non-fiction', 'Fantasy', 'Thriller', 'Romance',
-            'Mystery', 'Historical', 'Science Fiction', 'Biography', 'Other'];
+    'Mystery', 'Historical', 'Science Fiction', 'Biography', 'Other'];
 
   constructor(private fb: FormBuilder, private bookService: BookService) {
     this.form = this.fb.group({
@@ -38,7 +40,7 @@ export class BookFormComponent {
 
   get canSuggest(): boolean {
     return this.form.get('title')?.valid === true &&
-           this.form.get('author')?.value?.trim().length > 0;
+      this.form.get('author')?.value?.trim().length > 0;
   }
 
   onSuggestLocation(): void {
@@ -51,6 +53,7 @@ export class BookFormComponent {
     this.suggestionError = '';
     this.suggestedLocation = undefined;
     this.locationConfirmed = false;
+    this.adjustedCoords = undefined;
 
     this.bookService.suggestLocation({ title, author }).subscribe({
       next: (location) => {
@@ -68,11 +71,45 @@ export class BookFormComponent {
     this.locationConfirmed = true;
   }
 
+ onLocationAdjusted(coords: { lat: number, lng: number }): void {
+  this.adjustedCoords = coords;
+  this.locationConfirmed = true;
+
+  this.bookService.reverseGeocode(coords.lat, coords.lng).subscribe({
+    next: (result) => {
+      if (this.suggestedLocation && result.address) {
+        this.suggestedLocation = {
+          ...this.suggestedLocation,
+          lat: coords.lat,
+          lng: coords.lng,
+          placeName: result.address.city 
+            || result.address.town 
+            || result.address.village 
+            || result.address.county
+            || this.suggestedLocation.placeName,
+          country: result.address.country || this.suggestedLocation.country
+        };
+      }
+    }
+  });
+}
+
   onSubmit(): void {
     if (this.form.valid) {
+      const locationToSave = this.suggestedLocation ? {
+        ...this.suggestedLocation,
+        lat: this.adjustedCoords?.lat ?? this.suggestedLocation.lat,
+        lng: this.adjustedCoords?.lng ?? this.suggestedLocation.lng
+      } : undefined;
+
+console.log('locationConfirmed:', this.locationConfirmed);
+console.log('suggestedLocation:', this.suggestedLocation);
+console.log('adjustedCoords:', this.adjustedCoords);
+console.log('locationToSave:', locationToSave);
+
       this.bookSubmitted.emit({
         book: this.form.value,
-        location: this.locationConfirmed ? this.suggestedLocation : undefined
+        location: this.locationConfirmed ? locationToSave : undefined
       });
     } else {
       this.form.markAllAsTouched();
@@ -83,6 +120,7 @@ export class BookFormComponent {
     this.form.reset();
     this.suggestedLocation = undefined;
     this.locationConfirmed = false;
+    this.adjustedCoords = undefined;
     this.cancelled.emit();
   }
 }

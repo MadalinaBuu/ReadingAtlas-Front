@@ -1,114 +1,120 @@
 <div class="card shadow-sm p-4">
-  <h4 class="mb-4">Add New Book</h4>
+    <h4 class="mb-4">Add New Book</h4>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-    <!-- Title -->
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Title *</label>
-      <input type="text" class="form-control" formControlName="title"
-             placeholder="Book title">
-      <div class="text-danger small mt-1"
-           *ngIf="form.get('title')?.invalid && form.get('title')?.touched">
-        Title is required.
-      </div>
-    </div>
-
-    <!-- Author -->
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Author *</label>
-      <input type="text" class="form-control" formControlName="author"
-             placeholder="Author name">
-      <div class="text-danger small mt-1"
-           *ngIf="form.get('author')?.invalid && form.get('author')?.touched">
-        Author is required.
-      </div>
-    </div>
-
-    <!-- AI Location Suggestion -->
-    <div class="mb-4">
-      <button type="button" class="btn btn-outline-primary btn-sm"
-              [disabled]="!canSuggest || isLoadingSuggestion"
-              (click)="onSuggestLocation()">
-        <span *ngIf="isLoadingSuggestion">
-          <span class="spinner-border spinner-border-sm me-1"></span>
-          Suggesting...
-        </span>
-        <span *ngIf="!isLoadingSuggestion">✨ Suggest Location (AI)</span>
-      </button>
-
-      <!-- Eroare -->
-      <div class="text-danger small mt-2" *ngIf="suggestionError">
-        {{ suggestionError }}
-      </div>
-
-      <!-- Sugestie primita -->
-      <div class="ai-suggestion mt-3" *ngIf="suggestedLocation && !locationConfirmed">
-        <div class="d-flex align-items-start gap-2">
-          <span class="fs-4">📍</span>
-          <div>
-            <div class="fw-semibold">{{ suggestedLocation.placeName }}, {{ suggestedLocation.country }}</div>
-            <div class="text-muted small">{{ suggestedLocation.context }}</div>
-            <div class="text-muted small">
-              {{ suggestedLocation.lat | number:'1.4-4' }}, {{ suggestedLocation.lng | number:'1.4-4' }}
+        <!-- Title -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Title *</label>
+            <input type="text" class="form-control" formControlName="title" placeholder="Book title">
+            <div class="text-danger small mt-1" *ngIf="form.get('title')?.invalid && form.get('title')?.touched">
+                Title is required.
             </div>
-          </div>
         </div>
-        <div class="d-flex gap-2 mt-2">
-          <button type="button" class="btn btn-success btn-sm"
-                  (click)="onConfirmLocation()">✓ Confirm</button>
-          <button type="button" class="btn btn-outline-secondary btn-sm"
-                  (click)="suggestedLocation = undefined">✗ Dismiss</button>
+
+        <!-- Author -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Author *</label>
+            <input type="text" class="form-control" formControlName="author" placeholder="Author name">
+            <div class="text-danger small mt-1" *ngIf="form.get('author')?.invalid && form.get('author')?.touched">
+                Author is required.
+            </div>
         </div>
-      </div>
 
-      <!-- Locatie confirmata -->
-      <div class="alert alert-success py-2 mt-3" *ngIf="locationConfirmed && suggestedLocation">
-        ✓ Location confirmed: <strong>{{ suggestedLocation.placeName }}, {{ suggestedLocation.country }}</strong>
-        <button type="button" class="btn btn-link btn-sm p-0 ms-2"
-                (click)="locationConfirmed = false">Change</button>
-      </div>
-    </div>
+        <!-- AI Location Suggestion -->
+        <div class="mb-4">
+            <button type="button" class="btn btn-outline-primary btn-sm" [disabled]="!canSuggest || isLoadingSuggestion"
+                (click)="onSuggestLocation()">
+                <span *ngIf="isLoadingSuggestion">
+                    <span class="spinner-border spinner-border-sm me-1"></span>
+                    Suggesting...
+                </span>
+                <span *ngIf="!isLoadingSuggestion">✨ Suggest Location (AI)</span>
+            </button>
 
-    <!-- Genre -->
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Genre</label>
-      <select class="form-select" formControlName="genre">
-        <option value="">— Select genre —</option>
-        <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
-      </select>
-    </div>
+            <!-- Eroare -->
+            <div class="text-danger small mt-2" *ngIf="suggestionError">
+                {{ suggestionError }}
+            </div>
 
-    <!-- Rating -->
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Rating (1-5)</label>
-      <input type="number" class="form-control" formControlName="rating"
-             min="1" max="5" placeholder="e.g. 4">
-      <div class="text-danger small mt-1"
-           *ngIf="form.get('rating')?.invalid && form.get('rating')?.touched">
-        Rating must be between 1 and 5.
-      </div>
-    </div>
+            <!-- Sugestie primita -->
+            <div class="ai-suggestion mt-3" *ngIf="suggestedLocation && !locationConfirmed">
+                <div class="d-flex align-items-start gap-2">
+                    <span class="fs-4">📍</span>
+                    <div>
+                        <div class="fw-semibold">{{ suggestedLocation.placeName }}, {{ suggestedLocation.country }}
+                        </div>
+                        <div class="text-muted small">{{ suggestedLocation.context }}</div>
+                        <div class="text-muted small">
+                            {{ suggestedLocation.lat | number:'1.4-4' }}, {{ suggestedLocation.lng | number:'1.4-4' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 mt-2">
+                    <button type="button" class="btn btn-success btn-sm" (click)="onConfirmLocation()">✓
+                        Confirm</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                        (click)="suggestedLocation = undefined">✗ Dismiss</button>
+                </div>
+            </div>
 
-    <!-- Date Read -->
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Date Read</label>
-      <input type="date" class="form-control" formControlName="dateRead">
-    </div>
+            <!-- Harta preview pentru confirmare/ajustare pin -->
+            <div *ngIf="suggestedLocation" class="mt-3">
+                <p class="small text-muted mb-1">
+                    <em>Drag the pin to adjust the location if needed:</em>
+                </p>
+                <app-map-view [books]="[]" [previewLocation]="suggestedLocation"
+                    (locationAdjusted)="onLocationAdjusted($event)" />
+            </div>
 
-    <!-- Notes -->
-    <div class="mb-3">
-      <label class="form-label fw-semibold">Notes</label>
-      <textarea class="form-control" formControlName="notes"
-                rows="3" placeholder="Your thoughts..."></textarea>
-    </div>
+            <!-- Locatie confirmata -->
+            <div class="alert alert-success py-2 mt-3" *ngIf="locationConfirmed && suggestedLocation">
+                ✓ Location confirmed: <strong>{{ suggestedLocation.placeName }}, {{ suggestedLocation.country
+                    }}</strong>
+                <br>
+                <small class="text-muted">
+                    {{ suggestedLocation.lat | number:'1.4-4' }}, {{ suggestedLocation.lng | number:'1.4-4' }}
+                </small>
+                <button type="button" class="btn btn-link btn-sm p-0 ms-2"
+                    (click)="locationConfirmed = false">Change</button>
+            </div>
+        </div>
 
-    <!-- Buttons -->
-    <div class="d-flex gap-2 justify-content-end">
-      <button type="button" class="btn btn-outline-secondary"
-              (click)="onCancel()">Cancel</button>
-      <button type="submit" class="btn btn-primary">Save Book</button>
-    </div>
+        <!-- Genre -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Genre</label>
+            <select class="form-select" formControlName="genre">
+                <option value="">— Select genre —</option>
+                <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+            </select>
+        </div>
 
-  </form>
+        <!-- Rating -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Rating (1-5)</label>
+            <input type="number" class="form-control" formControlName="rating" min="1" max="5" placeholder="e.g. 4">
+            <div class="text-danger small mt-1" *ngIf="form.get('rating')?.invalid && form.get('rating')?.touched">
+                Rating must be between 1 and 5.
+            </div>
+        </div>
+
+        <!-- Date Read -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Date Read</label>
+            <input type="date" class="form-control" formControlName="dateRead">
+        </div>
+
+        <!-- Notes -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Notes</label>
+            <textarea class="form-control" formControlName="notes" rows="3" placeholder="Your thoughts..."></textarea>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2 justify-content-end">
+            <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Book</button>
+        </div>
+
+    </form>
 </div>

@@ -1,36 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MapViewComponent } from '../../components/map-view/map-view.component';
+import { BookService } from '../../services/book.service';
 import { Book } from '../../models/book.model';
 
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [MapViewComponent],
-  template: `
-    <div class="container-fluid py-4">
-      <h1 class="mb-4">Reading Atlas</h1>
-      <app-map-view [books]="books" />
-    </div>
-  `
+  imports: [MapViewComponent, CommonModule],
+  templateUrl: './map.component.html',
+  styleUrl: './map.component.scss'
 })
-export class MapComponent {
-  // Date de test pana conectam API-ul
-  books: Book[] = [
-    {
-      id: 1,
-      title: 'Prietenii mei',
-      author: 'Fredrik Backman',
-      createdAt: new Date().toISOString(),
-      location: {
-        id: 1,
-        bookId: 1,
-        placeName: 'Stockholm',
-        country: 'Suedia',
-        lat: 59.3293,
-        lng: 18.0686,
-        isAiSuggested: true,
-        isConfirmed: true
+export class MapComponent implements OnInit {
+  books: Book[] = [];
+  isLoading = true;
+
+  constructor(private bookService: BookService) {}
+
+  ngOnInit(): void {
+    this.bookService.getAllBooks().subscribe({
+      next: (books) => {
+        this.books = books;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
       }
-    }
-  ];
+    });
+  }
 }

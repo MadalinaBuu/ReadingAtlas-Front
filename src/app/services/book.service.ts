@@ -51,4 +51,10 @@ export class BookService {
   suggestLocation(request: SuggestLocationRequest): Observable<GeminiLocation> {
     return this.http.post<GeminiLocation>(`${this.apiUrl}/locations/suggest`, request);
   }
+
+  reverseGeocode(lat: number, lng: number): Observable<any> {
+  return this.http.get(
+    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+  );
+}
 }

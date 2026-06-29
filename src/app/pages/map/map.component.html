@@ -1,1 +1,15 @@
-<p>map works!</p>
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Reading Atlas 🗺️</h1>
+    <span class="text-muted small" *ngIf="!isLoading">
+      {{ books.length }} books on the map
+    </span>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border" role="status"></div>
+    <p class="mt-2 text-muted">Loading your books...</p>
+  </div>
+
+  <app-map-view *ngIf="!isLoading" [books]="books" />
+</div>
