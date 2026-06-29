@@ -1,0 +1,22 @@
+.card {
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+
+  &:hover {
+    background-color: var(--color-text);
+    border-color: var(--color-text);
+  }
+}
+
+.ai-suggestion {
+  background: #f8f4ff;
+  border: 1px solid #d9c2f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
