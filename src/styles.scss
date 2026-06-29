@@ -1,1 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'bootstrap/scss/bootstrap';
+
+// Variabile globale - paleta Reading Atlas
+:root {
+  --color-primary: #8B6F5E;      // maro cald
+  --color-secondary: #C4A882;    // bej auriu
+  --color-background: #FAF7F2;   // crem foarte deschis
+  --color-surface: #FFFFFF;      // alb pentru carduri
+  --color-text: #3D2B1F;         // maro inchis pentru text
+  --color-accent: #7A9E7E;       // verde sage pentru accente
+  --color-border: #E8DDD5;       // bej deschis pentru borduri
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: 'Georgia', serif;
+}
