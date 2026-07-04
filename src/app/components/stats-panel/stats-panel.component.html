@@ -1,0 +1,33 @@
+<div class="stats-panel mb-4" *ngIf="stats">
+  <div class="row g-3">
+
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center p-3">
+        <div class="stat-number">{{ stats.totalBooks }}</div>
+        <div class="stat-label">Books read</div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center p-3">
+        <div class="stat-number">{{ stats.totalCountries }}</div>
+        <div class="stat-label">Countries explored</div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center p-3">
+        <div class="stat-number">{{ stats.averageRating || '—' }}</div>
+        <div class="stat-label">Average rating</div>
+      </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center p-3">
+        <div class="stat-number">{{ stats.favoriteGenre }}</div>
+        <div class="stat-label">Favourite genre</div>
+      </div>
+    </div>
+
+  </div>
+</div>

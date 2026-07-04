@@ -12,16 +12,57 @@
       (cancelled)="showForm = false" />
   </div>
 
+  <!-- Filtre -->
+  <div class="filters-bar mb-4 p-3" *ngIf="!showForm">
+    <div class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label small fw-semibold">Genre</label>
+        <select class="form-select form-select-sm" [(ngModel)]="filterGenre" (change)="applyFilters()">
+          <option value="">All genres</option>
+          <option *ngFor="let g of availableGenres" [value]="g">{{ g }}</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small fw-semibold">Year</label>
+        <select class="form-select form-select-sm" [(ngModel)]="filterYear" (change)="applyFilters()">
+          <option value="">All years</option>
+          <option *ngFor="let y of availableYears" [value]="y">{{ y }}</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold">Author</label>
+        <input type="text" class="form-control form-control-sm"
+               [(ngModel)]="filterAuthor"
+               (input)="applyFilters()"
+               placeholder="Search by author...">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-outline-secondary btn-sm w-100"
+                *ngIf="hasActiveFilters"
+                (click)="resetFilters()">
+          Clear filters
+        </button>
+      </div>
+    </div>
+    <div class="mt-2 small text-muted" *ngIf="hasActiveFilters">
+      Showing {{ filteredBooks.length }} of {{ books.length }} books
+    </div>
+  </div>
+  
+<!-- Statistici -->
+<app-stats-panel [books]="books" *ngIf="!showForm && !isLoading" />
+
   <div *ngIf="isLoading" class="text-center py-5">
     <div class="spinner-border" role="status"></div>
   </div>
 
-  <div *ngIf="!isLoading && books.length === 0 && !showForm" class="text-center py-5">
-    <p class="text-muted">No books yet. Add your first book!</p>
+  <div *ngIf="!isLoading && filteredBooks.length === 0 && !showForm" class="text-center py-5">
+    <p class="text-muted" *ngIf="hasActiveFilters">No books match your filters.</p>
+    <p class="text-muted" *ngIf="!hasActiveFilters">No books yet. Add your first book!</p>
   </div>
 
-  <div class="row row-cols-1 row-cols-md-3 g-4" *ngIf="!isLoading && books.length > 0">
-    <div class="col" *ngFor="let book of books">
+  <div class="row row-cols-1 row-cols-md-3 g-4" *ngIf="!isLoading && filteredBooks.length > 0">
+    <div class="col" *ngFor="let book of filteredBooks">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <h5 class="card-title">{{ book.title }}</h5>
