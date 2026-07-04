@@ -1,0 +1,48 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="text-center mb-4">
+      <h1 class="auth-title">📖 Reading Atlas</h1>
+      <p class="text-muted">Sign in to your account</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Email</label>
+        <input type="email" class="form-control" formControlName="email"
+               placeholder="your@email.com">
+        <div class="text-danger small mt-1"
+             *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+          Valid email is required.
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Password</label>
+        <input type="password" class="form-control" formControlName="password"
+               placeholder="••••••••">
+        <div class="text-danger small mt-1"
+             *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+          Password is required.
+        </div>
+      </div>
+
+      <div class="alert alert-danger py-2" *ngIf="error">
+        {{ error }}
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100"
+              [disabled]="isLoading">
+        <span *ngIf="isLoading">
+          <span class="spinner-border spinner-border-sm me-1"></span>
+          Signing in...
+        </span>
+        <span *ngIf="!isLoading">Sign In</span>
+      </button>
+
+      <div class="text-center mt-3">
+        <span class="text-muted small">Don't have an account? </span>
+        <a routerLink="/register" class="small">Create one</a>
+      </div>
+    </form>
+  </div>
+</div>
