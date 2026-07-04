@@ -61,21 +61,28 @@ export class MapViewComponent implements OnInit, OnDestroy, OnChanges {
     this.markers.forEach(m => m.remove());
     this.markers = [];
 
-    this.books
-      .filter(b => b.location?.isConfirmed)
-      .forEach(book => {
-        if (book.location) {
-          const marker = L.marker([book.location.lat, book.location.lng])
-            .bindPopup(`
-              <strong>${book.title}</strong><br>
-              ${book.author}<br>
-              ${book.location.placeName}, ${book.location.country}
-              ${book.rating ? '<br>⭐ ' + book.rating + '/5' : ''}
-            `)
-            .addTo(this.map);
-          this.markers.push(marker);
-        }
-      });
+    const confirmedBooks = this.books.filter(b => b.location?.isConfirmed);
+
+    confirmedBooks.forEach(book => {
+      if (book.location) {
+        const marker = L.marker([book.location.lat, book.location.lng])
+          .bindPopup(`
+            <strong>${book.title}</strong><br>
+            ${book.author}<br>
+            ${book.location.placeName}, ${book.location.country}
+            ${book.rating ? '<br>⭐ ' + book.rating + '/5' : ''}
+          `)
+          .addTo(this.map);
+        this.markers.push(marker);
+      }
+    });
+
+    // Daca e o singura carte, centreaza pe ea si deschide popup-ul
+    if (confirmedBooks.length === 1 && confirmedBooks[0].location) {
+      const loc = confirmedBooks[0].location;
+      this.map.setView([loc.lat, loc.lng], 6);
+      this.markers[0]?.openPopup();
+    }
   }
 
   private updatePreviewMarker(): void {
@@ -105,7 +112,6 @@ export class MapViewComponent implements OnInit, OnDestroy, OnChanges {
         `)
         .addTo(this.map);
 
-      // NgZone forteaza Angular sa detecteze schimbarea dupa dragend
       this.previewMarker.on('dragend', (event) => {
         const pos = (event.target as L.Marker).getLatLng();
         this.zone.run(() => {

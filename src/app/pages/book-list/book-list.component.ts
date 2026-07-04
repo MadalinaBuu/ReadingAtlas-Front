@@ -7,11 +7,12 @@ import { CreateLocation } from '../../models/location.model';
 import { GeminiLocation } from '../../models/gemini-location.model';
 import { BookService } from '../../services/book.service';
 import { StatsPanelComponent } from "../../components/stats-panel/stats-panel.component";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-book-list',
   standalone: true,
-  imports: [CommonModule, BookFormComponent, FormsModule, StatsPanelComponent],
+  imports: [CommonModule, BookFormComponent, FormsModule, StatsPanelComponent, RouterLink],
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.scss'
 })

@@ -1,0 +1,72 @@
+.book-title {
+  font-family: 'Georgia', serif;
+  font-size: 2rem;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.book-author {
+  font-size: 1.1rem;
+}
+
+.book-notes {
+  color: var(--color-text);
+  line-height: 1.7;
+  font-style: italic;
+}
+
+.genre-badge {
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+}
+
+.rating-badge {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.ai-badge {
+  background-color: #f3e9ff;
+  color: #7c5ba6;
+}
+
+.manual-badge {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.info-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.info-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  min-width: 90px;
+}
+
+.delete-confirm {
+  background: #fff0f0;
+  border: 1px solid #f0c2c2;
+  border-radius: 8px;
+}
+
+.book-info {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.ai-suggestion {
+  background: #f8f4ff;
+  border: 1px solid #d9c2f0;
+  border-radius: 8px;
+}
