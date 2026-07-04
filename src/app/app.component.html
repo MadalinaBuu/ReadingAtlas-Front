@@ -1,6 +1,9 @@
-<nav>
-  <a routerLink="/map">Map</a>
-  <a routerLink="/books">Books</a>
+<nav class="app-nav">
+  <div class="nav-brand">📖 Reading Atlas</div>
+  <div class="nav-links">
+    <a routerLink="/map" routerLinkActive="active">Map</a>
+    <a routerLink="/books" routerLinkActive="active">Books</a>
+  </div>
 </nav>
 
 <router-outlet />
