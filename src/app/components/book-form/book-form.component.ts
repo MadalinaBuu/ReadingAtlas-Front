@@ -154,8 +154,11 @@ export class BookFormComponent {
 
     this.bookService.checkDuplicate(title, author).subscribe({
       next: (result) => {
-        if (result.isDuplicate) {
+        if (result.isDuplicate && !result.isFuzzy) {
           this.duplicateWarning = `"${result.existingTitle}" already exists in your library.`;
+          this.duplicateBookId = result.existingBookId;
+        } else if (result.isDuplicate && result.isFuzzy) {
+          this.duplicateWarning = `Similar book found: "${result.existingTitle}" (${result.similarity}% match). Could this be the same book?`;
           this.duplicateBookId = result.existingBookId;
         } else {
           this.duplicateWarning = '';
