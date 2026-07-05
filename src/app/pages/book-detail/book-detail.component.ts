@@ -6,11 +6,13 @@ import { Book } from '../../models/book.model';
 import { MapViewComponent } from '../../components/map-view/map-view.component';
 import { GeminiLocation } from '../../models/gemini-location.model';
 import { CreateLocation } from '../../models/location.model';
+import { BookFormComponent } from "../../components/book-form/book-form.component";
+import { CreateBook } from '../../models/book.model';
 
 @Component({
   selector: 'app-book-detail',
   standalone: true,
-  imports: [CommonModule, MapViewComponent],
+  imports: [CommonModule, MapViewComponent, BookFormComponent],
   templateUrl: './book-detail.component.html',
   styleUrl: './book-detail.component.scss'
 })
@@ -25,6 +27,8 @@ export class BookDetailComponent implements OnInit {
   isLoadingSuggestion = false;
   locationConfirmed = false;
   suggestionError = '';
+
+  showEditForm = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -109,5 +113,55 @@ export class BookDetailComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/books']);
+  }
+
+  onEditSaved(event: { book: CreateBook, location?: GeminiLocation }): void {
+    if (!this.book) return;
+
+    this.bookService.updateBook(this.book.id, event.book).subscribe({
+      next: (updatedBook) => {
+        // Daca avem locatie noua confirmata, o salvam
+        if (event.location) {
+          const location: CreateLocation = {
+            bookId: this.book!.id,
+            placeName: event.location.placeName,
+            country: event.location.country,
+            lat: event.location.lat,
+            lng: event.location.lng,
+            description: event.location.context,
+            isAiSuggested: true,
+            isConfirmed: true
+          };
+
+          // Daca cartea are deja locatie, o actualizam; altfel o adaugam
+          if (this.book!.location) {
+            this.bookService.updateLocation(this.book!.location.id, location).subscribe({
+              next: () => {
+                this.bookService.getBookById(this.book!.id).subscribe(b => {
+                  this.book = b;
+                  this.showEditForm = false;
+                });
+              }
+            });
+          } else {
+            this.bookService.addLocation(location).subscribe({
+              next: () => {
+                this.bookService.getBookById(this.book!.id).subscribe(b => {
+                  this.book = b;
+                  this.showEditForm = false;
+                });
+              }
+            });
+          }
+        } else {
+          // Fara locatie noua, reincarcam cartea
+          this.bookService.getBookById(updatedBook.id).subscribe(b => {
+            this.book = b;
+            this.showEditForm = false;
+          });
+        }
+      },
+      error: () => console.error('Error updating book')
+    });
   }
 }

@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CreateBook } from '../../models/book.model';
+import { Book, CreateBook } from '../../models/book.model';
 import { GeminiLocation } from '../../models/gemini-location.model';
 import { BookService } from '../../services/book.service';
 import { MapViewComponent } from '../map-view/map-view.component';
@@ -17,6 +17,7 @@ import { RouterLink } from '@angular/router';
 export class BookFormComponent {
   @Output() bookSubmitted = new EventEmitter<{ book: CreateBook, location?: GeminiLocation }>();
   @Output() cancelled = new EventEmitter<void>();
+  @Input() editBook?: Book;
 
   form: FormGroup;
   suggestedLocation?: GeminiLocation;
@@ -41,6 +42,22 @@ export class BookFormComponent {
       notes: [''],
       isbn: ['']
     });
+  }
+
+  ngOnInit(): void {
+    if (this.editBook) {
+      this.form.patchValue({
+        title: this.editBook.title,
+        author: this.editBook.author,
+        genre: this.editBook.genre,
+        rating: this.editBook.rating,
+        dateRead: this.editBook.dateRead
+          ? new Date(this.editBook.dateRead).toISOString().split('T')[0]
+          : '',
+        notes: this.editBook.notes,
+        isbn: this.editBook.isbn
+      });
+    }
   }
 
   get canSuggest(): boolean {

@@ -23,11 +23,21 @@ export class BookService {
   }
 
   addBook(book: CreateBook): Observable<Book> {
-    return this.http.post<Book>(`${this.apiUrl}/books`, book);
+    const payload = {
+      ...book,
+      dateRead: book.dateRead || null,
+      rating: book.rating || null
+    };
+    return this.http.post<Book>(`${this.apiUrl}/books`, payload);
   }
 
   updateBook(id: number, book: CreateBook): Observable<Book> {
-    return this.http.put<Book>(`${this.apiUrl}/books/${id}`, book);
+    const payload = {
+      ...book,
+      dateRead: book.dateRead || null,
+      rating: book.rating || null
+    };
+    return this.http.put<Book>(`${this.apiUrl}/books/${id}`, payload);
   }
 
   deleteBook(id: number): Observable<void> {
