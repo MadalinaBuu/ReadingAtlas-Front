@@ -11,7 +11,7 @@ import { GeminiLocation, SuggestLocationRequest } from '../models/gemini-locatio
 export class BookService {
   private apiUrl = 'https://localhost:7187/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Books
   getAllBooks(): Observable<Book[]> {
@@ -53,8 +53,14 @@ export class BookService {
   }
 
   reverseGeocode(lat: number, lng: number): Observable<any> {
-  return this.http.get(
-    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
-  );
-}
+    return this.http.get(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+    );
+  }
+
+  checkDuplicate(title: string, author: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/books/check-duplicate`, {
+      params: { title, author }
+    });
+  }
 }

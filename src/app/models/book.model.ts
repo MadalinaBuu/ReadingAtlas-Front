@@ -8,6 +8,7 @@ export interface Book {
   rating?: number;
   dateRead?: string;
   notes?: string;
+  isbn?: string; 
   createdAt: string;
   location?: Location;
 }
@@ -19,4 +20,5 @@ export interface CreateBook {
   rating?: number;
   dateRead?: string;
   notes?: string;
+  isbn?: string;
 }

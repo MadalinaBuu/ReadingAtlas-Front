@@ -5,11 +5,12 @@ import { CreateBook } from '../../models/book.model';
 import { GeminiLocation } from '../../models/gemini-location.model';
 import { BookService } from '../../services/book.service';
 import { MapViewComponent } from '../map-view/map-view.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-book-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MapViewComponent],
+  imports: [ReactiveFormsModule, CommonModule, MapViewComponent, RouterLink],
   templateUrl: './book-form.component.html',
   styleUrl: './book-form.component.scss'
 })
@@ -27,6 +28,9 @@ export class BookFormComponent {
   genres = ['Fiction', 'Non-fiction', 'Fantasy', 'Thriller', 'Romance',
     'Mystery', 'Historical', 'Science Fiction', 'Biography', 'Other'];
 
+  duplicateWarning = '';
+  duplicateBookId?: number;
+
   constructor(private fb: FormBuilder, private bookService: BookService) {
     this.form = this.fb.group({
       title: ['', Validators.required],
@@ -34,7 +38,8 @@ export class BookFormComponent {
       genre: [''],
       rating: [null, [Validators.min(1), Validators.max(5)]],
       dateRead: [''],
-      notes: ['']
+      notes: [''],
+      isbn: ['']
     });
   }
 
@@ -71,28 +76,28 @@ export class BookFormComponent {
     this.locationConfirmed = true;
   }
 
- onLocationAdjusted(coords: { lat: number, lng: number }): void {
-  this.adjustedCoords = coords;
-  this.locationConfirmed = true;
+  onLocationAdjusted(coords: { lat: number, lng: number }): void {
+    this.adjustedCoords = coords;
+    this.locationConfirmed = true;
 
-  this.bookService.reverseGeocode(coords.lat, coords.lng).subscribe({
-    next: (result) => {
-      if (this.suggestedLocation && result.address) {
-        this.suggestedLocation = {
-          ...this.suggestedLocation,
-          lat: coords.lat,
-          lng: coords.lng,
-          placeName: result.address.city 
-            || result.address.town 
-            || result.address.village 
-            || result.address.county
-            || this.suggestedLocation.placeName,
-          country: result.address.country || this.suggestedLocation.country
-        };
+    this.bookService.reverseGeocode(coords.lat, coords.lng).subscribe({
+      next: (result) => {
+        if (this.suggestedLocation && result.address) {
+          this.suggestedLocation = {
+            ...this.suggestedLocation,
+            lat: coords.lat,
+            lng: coords.lng,
+            placeName: result.address.city
+              || result.address.town
+              || result.address.village
+              || result.address.county
+              || this.suggestedLocation.placeName,
+            country: result.address.country || this.suggestedLocation.country
+          };
+        }
       }
-    }
-  });
-}
+    });
+  }
 
   onSubmit(): void {
     if (this.form.valid) {
@@ -102,10 +107,10 @@ export class BookFormComponent {
         lng: this.adjustedCoords?.lng ?? this.suggestedLocation.lng
       } : undefined;
 
-console.log('locationConfirmed:', this.locationConfirmed);
-console.log('suggestedLocation:', this.suggestedLocation);
-console.log('adjustedCoords:', this.adjustedCoords);
-console.log('locationToSave:', locationToSave);
+      console.log('locationConfirmed:', this.locationConfirmed);
+      console.log('suggestedLocation:', this.suggestedLocation);
+      console.log('adjustedCoords:', this.adjustedCoords);
+      console.log('locationToSave:', locationToSave);
 
       this.bookSubmitted.emit({
         book: this.form.value,
@@ -122,5 +127,24 @@ console.log('locationToSave:', locationToSave);
     this.locationConfirmed = false;
     this.adjustedCoords = undefined;
     this.cancelled.emit();
+  }
+
+  onAuthorBlur(): void {
+    const title = this.form.get('title')?.value;
+    const author = this.form.get('author')?.value;
+
+    if (!title || !author) return;
+
+    this.bookService.checkDuplicate(title, author).subscribe({
+      next: (result) => {
+        if (result.isDuplicate) {
+          this.duplicateWarning = `"${result.existingTitle}" already exists in your library.`;
+          this.duplicateBookId = result.existingBookId;
+        } else {
+          this.duplicateWarning = '';
+          this.duplicateBookId = undefined;
+        }
+      }
+    });
   }
 }

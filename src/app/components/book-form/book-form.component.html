@@ -15,10 +15,19 @@
         <!-- Author -->
         <div class="mb-3">
             <label class="form-label fw-semibold">Author *</label>
-            <input type="text" class="form-control" formControlName="author" placeholder="Author name">
+            <input type="text" class="form-control" formControlName="author" placeholder="Author name"
+                (blur)="onAuthorBlur()">
             <div class="text-danger small mt-1" *ngIf="form.get('author')?.invalid && form.get('author')?.touched">
                 Author is required.
             </div>
+        </div>
+
+        <div class="duplicate-warning p-3 mb-3" *ngIf="duplicateWarning">
+            ⚠️ {{ duplicateWarning }}
+            <a [routerLink]="['/books', duplicateBookId]" class="ms-2 small">
+                View existing book →
+            </a>
+            <div class="small text-muted mt-1">You can still save if this is a different edition.</div>
         </div>
 
         <!-- AI Location Suggestion -->
@@ -108,6 +117,15 @@
         <div class="mb-3">
             <label class="form-label fw-semibold">Notes</label>
             <textarea class="form-control" formControlName="notes" rows="3" placeholder="Your thoughts..."></textarea>
+        </div>
+
+        <!-- ISBN -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">ISBN</label>
+            <input type="text" class="form-control" formControlName="isbn" placeholder="e.g. 9780141036144">
+            <div class="form-text small text-muted">
+                Optional — helps identify the exact edition
+            </div>
         </div>
 
         <!-- Buttons -->
