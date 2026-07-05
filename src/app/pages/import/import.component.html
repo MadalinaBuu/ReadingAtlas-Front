@@ -1,0 +1,113 @@
+<div class="container py-4">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a routerLink="/books" class="btn btn-outline-secondary btn-sm">← Back</a>
+    <h1 class="mb-0">Import Books</h1>
+  </div>
+
+  <!-- Instructiuni -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-6">
+      <div class="info-card p-4">
+        <h5>📋 How it works</h5>
+        <p class="text-muted small mb-2">
+          Upload a CSV file with your books. The only required column is <strong>Title</strong>.
+        </p>
+        <p class="text-muted small mb-0">
+          Optional columns: <code>Author</code>, <code>Rating</code> (1-5),
+          <code>DateRead</code>, <code>Genre</code>, <code>Notes</code>
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="info-card p-4">
+        <h5>📅 Date formats accepted</h5>
+        <p class="text-muted small mb-1">
+          <code>2024-01-15</code> — ISO format (recommended)
+        </p>
+        <p class="text-muted small mb-1">
+          <code>15/01/2024</code> — DD/MM/YYYY
+        </p>
+        <p class="text-muted small mb-0">
+          <code>01/15/2024</code> — MM/DD/YYYY
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Download template -->
+  <div class="mb-4">
+    <button class="btn btn-outline-primary btn-sm" (click)="downloadTemplate()">
+      ⬇ Download CSV Template
+    </button>
+    <span class="text-muted small ms-2">
+      Use this as a starting point for your own list
+    </span>
+  </div>
+
+  <!-- Upload -->
+  <div class="upload-area p-4 mb-4">
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Select CSV file</label>
+      <input type="file" class="form-control" accept=".csv"
+             (change)="onFileSelected($event)">
+    </div>
+
+    <div *ngIf="selectedFile" class="text-muted small mb-3">
+      📄 {{ selectedFile.name }} ({{ (selectedFile.size / 1024).toFixed(1) }} KB)
+    </div>
+
+    <button class="btn btn-primary"
+            [disabled]="!selectedFile || isLoading"
+            (click)="onImport()">
+      <span *ngIf="isLoading">
+        <span class="spinner-border spinner-border-sm me-1"></span>
+        Importing...
+      </span>
+      <span *ngIf="!isLoading">⬆ Import Books</span>
+    </button>
+  </div>
+
+  <!-- Eroare -->
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <!-- Rezultat -->
+  <div class="result-card p-4" *ngIf="result">
+    <h5 class="mb-3">Import Complete</h5>
+
+    <div class="row g-3 mb-3">
+      <div class="col-4">
+        <div class="stat-box text-center p-3">
+          <div class="stat-num text-success">{{ result.importedCount }}</div>
+          <div class="stat-label">Imported</div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="stat-box text-center p-3">
+          <div class="stat-num text-warning">{{ result.duplicateCount }}</div>
+          <div class="stat-label">Duplicates skipped</div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="stat-box text-center p-3">
+          <div class="stat-num text-danger">{{ result.errorCount }}</div>
+          <div class="stat-label">Errors</div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="result.importedCount > 0" class="alert alert-success py-2">
+      ✓ {{ result.importedCount }} books added to your library!
+      <a routerLink="/books" class="alert-link ms-2">View your books →</a>
+    </div>
+
+    <div *ngIf="result.errors.length > 0" class="mt-3">
+      <h6 class="text-danger">Errors:</h6>
+      <ul class="small text-danger">
+        <li *ngFor="let err of result.errors">{{ err }}</li>
+      </ul>
+    </div>
+  </div>
+</div>

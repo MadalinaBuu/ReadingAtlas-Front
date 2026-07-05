@@ -18,6 +18,7 @@ export class BookDetailComponent implements OnInit {
   book?: Book;
   isLoading = true;
   showDeleteConfirm = false;
+  showFullNotes = false;
 
   // AI suggestion
   suggestedLocation?: GeminiLocation;
@@ -29,7 +30,7 @@ export class BookDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private bookService: BookService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
