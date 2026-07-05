@@ -1,56 +1,53 @@
 @import 'bootstrap/scss/bootstrap';
 
-// Variabile globale - paleta Reading Atlas
 :root {
-  --color-primary: #8B6F5E; // maro cald
-  --color-secondary: #C4A882; // bej auriu
-  --color-background: #FAF7F2; // crem foarte deschis
-  --color-surface: #FFFFFF; // alb pentru carduri
-  --color-text: #3D2B1F; // maro inchis pentru text
-  --color-accent: #7A9E7E; // verde sage pentru accente
-  --color-border: #E8DDD5; // bej deschis pentru borduri
+  --color-primary: #4A5568;      // slate albastru-gri
+  --color-secondary: #8FA8C8;    // albastru deschis
+  --color-background: #F8F7F4;   // crem foarte deschis
+  --color-surface: #FFFFFF;      // alb pentru carduri
+  --color-text: #2D3748;         // text închis
+  --color-accent: #C4956A;       // teracotă
+  --color-border: #E2E8F0;       // border discret
 }
 
 body {
   background-color: var(--color-background);
   color: var(--color-text);
   font-family: 'Georgia', serif;
+}
 
-  // Override Bootstrap buttons
-  .btn-primary {
+.btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: #fff !important;
+
+  &:hover, &:focus {
+    background-color: var(--color-text) !important;
+    border-color: var(--color-text) !important;
+  }
+}
+
+.btn-outline-primary {
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+
+  &:hover {
     background-color: var(--color-primary) !important;
-    border-color: var(--color-primary) !important;
     color: #fff !important;
-
-    &:hover,
-    &:focus {
-      background-color: var(--color-text) !important;
-      border-color: var(--color-text) !important;
-    }
   }
+}
 
-  .btn-outline-primary {
-    color: var(--color-primary) !important;
-    border-color: var(--color-primary) !important;
+.btn-outline-secondary {
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
 
-    &:hover {
-      background-color: var(--color-primary) !important;
-      color: #fff !important;
-    }
-  }
-
-  .btn-outline-secondary {
+  &:hover {
+    background-color: var(--color-border) !important;
     color: var(--color-text) !important;
-    border-color: var(--color-border) !important;
-
-    &:hover {
-      background-color: var(--color-border) !important;
-      color: var(--color-text) !important;
-    }
   }
+}
 
-  .btn-success {
-    background-color: var(--color-accent) !important;
-    border-color: var(--color-accent) !important;
-  }
+.btn-success {
+  background-color: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
 }
