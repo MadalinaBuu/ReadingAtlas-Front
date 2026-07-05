@@ -11,8 +11,10 @@
       <button class="btn btn-outline-secondary btn-sm" (click)="goBack()">
         ← Back
       </button>
-      <div class="ms-auto d-flex gap-2">
-        <button class="btn btn-outline-secondary btn-sm" (click)="showDeleteConfirm = true">
+      <div class="ms-auto">
+        <button class="btn btn-outline-secondary btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteModal">
           🗑 Delete
         </button>
       </div>
@@ -124,21 +126,29 @@
       </div>
     </div>
 
-    <!-- Confirmare delete -->
-    <div class="delete-confirm mt-4 p-3" *ngIf="showDeleteConfirm">
-      <p class="mb-2">Are you sure you want to delete
-        <strong>{{ book!.title }}</strong>?
-      </p>
-      <div class="d-flex gap-2">
-        <button class="btn btn-danger btn-sm" (click)="onDelete()">
-          Yes, delete
-        </button>
-        <button class="btn btn-outline-secondary btn-sm" (click)="showDeleteConfirm = false">
-          Cancel
-        </button>
+  </ng-container>
+
+  <!-- Modal confirmare delete - in afara ng-container -->
+  <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title">Delete Book</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete <strong>{{ book?.title }}</strong>?
+          <p class="text-muted small mt-2 mb-0">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-outline-secondary"
+                  data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger"
+                  data-bs-dismiss="modal"
+                  (click)="onDelete()">Yes, delete</button>
+        </div>
       </div>
     </div>
-
-  </ng-container>
+  </div>
 
 </div>

@@ -18,7 +18,7 @@ export class MapViewComponent implements OnInit, OnDestroy, OnChanges {
   private markers: L.Marker[] = [];
   private previewMarker?: L.Marker;
 
-  constructor(private zone: NgZone) {}
+  constructor(private zone: NgZone) { }
 
   ngOnInit(): void {
     this.initMap();
@@ -67,10 +67,17 @@ export class MapViewComponent implements OnInit, OnDestroy, OnChanges {
       if (book.location) {
         const marker = L.marker([book.location.lat, book.location.lng])
           .bindPopup(`
-            <strong>${book.title}</strong><br>
-            ${book.author}<br>
-            ${book.location.placeName}, ${book.location.country}
-            ${book.rating ? '<br>⭐ ' + book.rating + '/5' : ''}
+<div>
+      <strong>${book.title}</strong><br>
+      ${book.author}<br>
+      ${book.location.placeName}, ${book.location.country}
+      ${book.rating ? '<br>⭐ ' + book.rating + '/5' : ''}
+      <br><br>
+      <a href="/books/${book.id}" 
+         style="color: #8B6F5E; font-weight: 600; font-size: 0.85rem;">
+        View details →
+      </a>
+    </div>
           `)
           .addTo(this.map);
         this.markers.push(marker);
