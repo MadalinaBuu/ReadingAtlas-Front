@@ -65,8 +65,8 @@ export class BookDetailComponent implements OnInit {
         this.suggestedLocation = location;
         this.isLoadingSuggestion = false;
       },
-      error: () => {
-        this.suggestionError = 'Could not get suggestion. Try again in a moment.';
+      error: (error) => {
+        this.suggestionError = error.message || 'Could not get suggestion. Try again in a moment.';
         this.isLoadingSuggestion = false;
       }
     });

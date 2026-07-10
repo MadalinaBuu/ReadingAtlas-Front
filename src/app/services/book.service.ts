@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Book, CreateBook } from '../models/book.model';
 import { Location, CreateLocation } from '../models/location.model';
 import { GeminiLocation, SuggestLocationRequest } from '../models/gemini-location.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
-  private apiUrl = 'https://localhost:7187/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -57,9 +58,19 @@ export class BookService {
     return this.http.put<Location>(`${this.apiUrl}/locations/${id}`, location);
   }
 
-  // AI
+ // AI
   suggestLocation(request: SuggestLocationRequest): Observable<GeminiLocation> {
-    return this.http.post<GeminiLocation>(`${this.apiUrl}/locations/suggest`, request);
+    return this.http.post<GeminiLocation>(`${this.apiUrl}/locations/suggest`, request)
+      .pipe(
+        catchError((error) => {
+        console.log(error);
+          if (error.status === 429) {
+            return throwError(() => new Error("You've reached your AI suggestion limit for today. Please try again tomorrow!"));
+          }
+          console.log(this);
+          return throwError(() => new Error('Could not get suggestion. Try again in a moment.'));
+        })
+      );
   }
 
   reverseGeocode(lat: number, lng: number): Observable<any> {

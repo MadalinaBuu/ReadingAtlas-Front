@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 interface ImportResult {
   importedCount: number;
@@ -18,7 +19,7 @@ interface ImportResult {
   styleUrl: './import.component.scss'
 })
 export class ImportComponent {
-  private apiUrl = 'https://localhost:7187/api/import';
+ private apiUrl = environment.apiUrl;
 
   selectedFile?: File;
   isLoading = false;
