@@ -19,7 +19,7 @@ interface ImportResult {
   styleUrl: './import.component.scss'
 })
 export class ImportComponent {
- private apiUrl = environment.apiUrl;
+ private apiUrl = environment.apiUrl + "/import";
 
   selectedFile?: File;
   isLoading = false;

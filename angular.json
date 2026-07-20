@@ -68,6 +68,18 @@
               "sourceMap": true
             }
           },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "reading-atlas-frontend:build:production"
+            },
+            "development": {
+              "buildTarget": "reading-atlas-frontend:build:development"
+            }
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
