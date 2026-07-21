@@ -10,4 +10,8 @@
   </div>
 </nav>
 
+<div class="location-progress-banner" *ngIf="showLocationProgress">
+  ✨ Finding locations for your books: {{ locationStatus?.withLocation }}/{{ locationStatus?.total }}
+</div>
+
 <router-outlet />

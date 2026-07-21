@@ -84,4 +84,9 @@ export class BookService {
       params: { title, author }
     });
   }
+
+  // Location processing status
+  getLocationStatus(): Observable<{ total: number; withLocation: number; isComplete: boolean }> {
+    return this.http.get<{ total: number; withLocation: number; isComplete: boolean }>(`${this.apiUrl}/books/location-status`);
+  }
 }
