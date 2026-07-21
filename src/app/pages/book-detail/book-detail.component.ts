@@ -8,11 +8,12 @@ import { GeminiLocation } from '../../models/gemini-location.model';
 import { CreateLocation } from '../../models/location.model';
 import { BookFormComponent } from "../../components/book-form/book-form.component";
 import { CreateBook } from '../../models/book.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-book-detail',
   standalone: true,
-  imports: [CommonModule, MapViewComponent, BookFormComponent],
+  imports: [CommonModule, MapViewComponent, BookFormComponent, FormsModule],
   templateUrl: './book-detail.component.html',
   styleUrl: './book-detail.component.scss'
 })
@@ -29,6 +30,11 @@ export class BookDetailComponent implements OnInit {
   suggestionError = '';
 
   showEditForm = false;
+  // Manual location
+  manualCity = '';
+  manualCountry = '';
+  isLoadingGeocode = false;
+  isManualSuggestion = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,6 +62,7 @@ export class BookDetailComponent implements OnInit {
     this.suggestionError = '';
     this.suggestedLocation = undefined;
     this.locationConfirmed = false;
+    this.isManualSuggestion = false; 
 
     this.bookService.suggestLocation({
       title: this.book.title,
@@ -82,7 +89,7 @@ export class BookDetailComponent implements OnInit {
       lat: this.suggestedLocation.lat,
       lng: this.suggestedLocation.lng,
       description: this.suggestedLocation.context,
-      isAiSuggested: true,
+      isAiSuggested: !this.isManualSuggestion,
       isConfirmed: true
     };
 
@@ -96,6 +103,26 @@ export class BookDetailComponent implements OnInit {
         });
       },
       error: () => console.error('Error saving location')
+    });
+  }
+
+onGeocodeLocation(): void {
+    if (!this.book || !this.manualCity.trim() || !this.manualCountry.trim()) return;
+    this.isLoadingGeocode = true;
+    this.suggestionError = '';
+    this.suggestedLocation = undefined;
+    this.locationConfirmed = false;
+
+    this.bookService.geocodeLocation(this.manualCity.trim(), this.manualCountry.trim()).subscribe({
+      next: (location) => {
+        this.suggestedLocation = location;
+        this.isManualSuggestion = true;
+        this.isLoadingGeocode = false;
+      },
+      error: (error) => {
+        this.suggestionError = error.message || 'Could not find that location.';
+        this.isLoadingGeocode = false;
+      }
     });
   }
 

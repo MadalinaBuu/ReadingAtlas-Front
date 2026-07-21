@@ -89,4 +89,16 @@ export class BookService {
   getLocationStatus(): Observable<{ total: number; withLocation: number; isComplete: boolean }> {
     return this.http.get<{ total: number; withLocation: number; isComplete: boolean }>(`${this.apiUrl}/books/location-status`);
   }
+
+  geocodeLocation(city: string, country: string): Observable<GeminiLocation> {
+    return this.http.post<GeminiLocation>(`${this.apiUrl}/locations/geocode`, { city, country })
+      .pipe(
+        catchError((error) => {
+          if (error.status === 404) {
+            return throwError(() => new Error("Could not find that location. Please check the spelling and try again."));
+          }
+          return throwError(() => new Error('Something went wrong. Please try again.'));
+        })
+      );
+  }
 }

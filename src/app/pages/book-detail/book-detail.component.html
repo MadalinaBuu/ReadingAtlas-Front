@@ -95,7 +95,26 @@
         <div class="card p-4 shadow-sm h-100" *ngIf="!book!.location">
           <div class="text-center mb-3">
             <p class="text-muted">No location added yet.</p>
-            <button class="btn btn-outline-primary btn-sm" [disabled]="isLoadingSuggestion"
+
+            <!-- Manual entry -->
+            <div class="d-flex gap-2 justify-content-center mb-2" *ngIf="!suggestedLocation">
+              <input type="text" class="form-control form-control-sm" style="max-width: 150px" placeholder="City"
+                [(ngModel)]="manualCity" [disabled]="isLoadingGeocode">
+              <input type="text" class="form-control form-control-sm" style="max-width: 150px" placeholder="Country"
+                [(ngModel)]="manualCountry" [disabled]="isLoadingGeocode">
+              <button class="btn btn-primary btn-sm"
+                [disabled]="isLoadingGeocode || !manualCity.trim() || !manualCountry.trim()"
+                (click)="onGeocodeLocation()">
+                <span *ngIf="isLoadingGeocode">
+                  <span class="spinner-border spinner-border-sm me-1"></span>
+                </span>
+                <span *ngIf="!isLoadingGeocode">📍 Add</span>
+              </button>
+            </div>
+
+            <div class="text-muted small mb-2" *ngIf="!suggestedLocation">— or —</div>
+
+            <button class="btn btn-outline-secondary btn-sm" [disabled]="isLoadingSuggestion" *ngIf="!suggestedLocation"
               (click)="onSuggestLocation()">
               <span *ngIf="isLoadingSuggestion">
                 <span class="spinner-border spinner-border-sm me-1"></span>
