@@ -1,9 +1,16 @@
 <nav class="app-nav" *ngIf="isLoggedIn">
   <div class="nav-brand">📖 Reading Atlas</div>
-  <div class="nav-links">
-    <a routerLink="/map" routerLinkActive="active">Map</a>
-    <a routerLink="/books" routerLinkActive="active">Books</a>
-     <a routerLink="/import" routerLinkActive="active">Import</a>
+
+  <button class="nav-toggle" (click)="menuOpen = !menuOpen" aria-label="Toggle menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="nav-links" [class.open]="menuOpen">
+    <a routerLink="/map" routerLinkActive="active" (click)="menuOpen = false">Map</a>
+    <a routerLink="/books" routerLinkActive="active" (click)="menuOpen = false">Books</a>
+    <a routerLink="/import" routerLinkActive="active" (click)="menuOpen = false">Import</a>
     <button class="btn btn-outline-secondary btn-sm" (click)="onLogout()">
       Sign Out
     </button>

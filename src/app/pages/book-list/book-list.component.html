@@ -1,15 +1,16 @@
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>My Books</h1>
+    <button class="btn btn-outline-secondary btn-sm" (click)="toggleViewMode()" *ngIf="!showForm">
+      {{ viewMode === 'grid' ? '☰ List view' : '🔲 Grid view' }}
+    </button>
     <button class="btn btn-primary" (click)="showForm = !showForm">
       {{ showForm ? 'Cancel' : '+ Add Book' }}
     </button>
   </div>
 
   <div *ngIf="showForm" class="mb-4">
-    <app-book-form
-      (bookSubmitted)="onBookSubmitted($event)"
-      (cancelled)="showForm = false" />
+    <app-book-form (bookSubmitted)="onBookSubmitted($event)" (cancelled)="showForm = false" />
   </div>
 
   <!-- Filtre -->
@@ -31,15 +32,11 @@
       </div>
       <div class="col-md-4">
         <label class="form-label small fw-semibold">Author</label>
-        <input type="text" class="form-control form-control-sm"
-               [(ngModel)]="filterAuthor"
-               (input)="applyFilters()"
-               placeholder="Search by author...">
+        <input type="text" class="form-control form-control-sm" [(ngModel)]="filterAuthor" (input)="applyFilters()"
+          placeholder="Search by author...">
       </div>
       <div class="col-md-2">
-        <button class="btn btn-outline-secondary btn-sm w-100"
-                *ngIf="hasActiveFilters"
-                (click)="resetFilters()">
+        <button class="btn btn-outline-secondary btn-sm w-100" *ngIf="hasActiveFilters" (click)="resetFilters()">
           Clear filters
         </button>
       </div>
@@ -48,9 +45,9 @@
       Showing {{ filteredBooks.length }} of {{ books.length }} books
     </div>
   </div>
-  
-<!-- Statistici -->
-<app-stats-panel [books]="books" *ngIf="!showForm && !isLoading" />
+
+  <!-- Statistici -->
+  <app-stats-panel [books]="books" *ngIf="!showForm && !isLoading" />
 
   <div *ngIf="isLoading" class="text-center py-5">
     <div class="spinner-border" role="status"></div>
@@ -61,8 +58,9 @@
     <p class="text-muted" *ngIf="!hasActiveFilters">No books yet. Add your first book!</p>
   </div>
 
-  <div class="row row-cols-1 row-cols-md-3 g-4" *ngIf="!isLoading && filteredBooks.length > 0">
-    <div class="col" *ngFor="let book of filteredBooks">
+  <div [ngClass]="viewMode === 'grid' ? 'row row-cols-1 row-cols-md-3 g-4' : 'list-view'"
+    *ngIf="!isLoading && filteredBooks.length > 0">
+    <div [ngClass]="viewMode === 'grid' ? 'col' : 'list-item'" *ngFor="let book of filteredBooks">
       <div class="card h-100 shadow-sm" [routerLink]="['/books', book.id]" style="cursor: pointer;">
         <div class="card-body">
           <h5 class="card-title">{{ book.title }}</h5>
@@ -70,7 +68,7 @@
 
           <div class="d-flex gap-2 flex-wrap mt-2">
             <span class="badge" *ngIf="book.genre"
-                  style="background-color: var(--color-secondary); color: var(--color-text);">
+              style="background-color: var(--color-secondary); color: var(--color-text);">
               {{ book.genre }}
             </span>
             <span class="badge bg-warning text-dark" *ngIf="book.rating">

@@ -14,6 +14,7 @@ import { interval, Subscription, switchMap } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
   locationStatus: { total: number; withLocation: number; isComplete: boolean } | null = null;
+  menuOpen = false;
   private pollingSubscription?: Subscription;
 
   constructor(
@@ -66,5 +67,6 @@ export class AppComponent implements OnInit, OnDestroy {
   onLogout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+    this.menuOpen = false; 
   }
 }

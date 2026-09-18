@@ -27,6 +27,12 @@ export class BookListComponent implements OnInit {
   filterYear = '';
   filterAuthor = '';
 
+  viewMode: 'grid' | 'list' = 'grid';
+
+  toggleViewMode(): void {
+    this.viewMode = this.viewMode === 'grid' ? 'list' : 'grid';
+  }
+
   get availableGenres(): string[] {
     const genres = this.books
       .map(b => b.genre)
@@ -41,7 +47,7 @@ export class BookListComponent implements OnInit {
     return [...new Set(years)].sort().reverse();
   }
 
-  constructor(private bookService: BookService) {}
+  constructor(private bookService: BookService) { }
 
   ngOnInit(): void {
     this.loadBooks();
@@ -62,9 +68,9 @@ export class BookListComponent implements OnInit {
   applyFilters(): void {
     this.filteredBooks = this.books.filter(book => {
       const matchesGenre = !this.filterGenre || book.genre === this.filterGenre;
-      const matchesYear = !this.filterYear || 
+      const matchesYear = !this.filterYear ||
         (book.dateRead && new Date(book.dateRead).getFullYear().toString() === this.filterYear);
-      const matchesAuthor = !this.filterAuthor || 
+      const matchesAuthor = !this.filterAuthor ||
         book.author.toLowerCase().includes(this.filterAuthor.toLowerCase());
       return matchesGenre && matchesYear && matchesAuthor;
     });
